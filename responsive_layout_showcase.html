@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Layout Showcase: CSS Grid vs Flexbox</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Smooth transition for layout switcher */
+        .layout-transition * {
+            transition: all 0.25s ease-in-out;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Code Syntax Highlighting simulation styles */
+        .token-tag { color: #f43f5e; }
+        .token-attr { color: #38bdf8; }
+        .token-val { color: #a3e635; }
+        .token-prop { color: #fbbf24; }
+        .token-value { color: #e879f9; }
+        .token-comment { color: #64748b; font-style: italic; }
+
+        /* Dynamic CSS Variables applied to preview iframe/container */
+        :root {
+            --layout-gap: 16px;
+            --layout-padding: 16px;
+            --sidebar-width: 240px;
+            --card-min-width: 220px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden bg-slate-950 text-slate-100">
+
+    <!-- Top Header & Global App Navigation -->
+    <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400">
+                <i class="fa-solid font-bold fa-layer-group text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                    LayoutLab <span class="text-xs font-normal px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Grid vs Flexbox</span>
+                </h1>
+                <p class="text-xs text-slate-400 hidden sm:block">Interactive Responsive Layout Visualizer & Snippet Generator</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <!-- Layout Mode Selector Switch -->
+            <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center text-xs font-medium">
+                <button id="btn-mode-grid" onclick="setLayoutMode('grid')" class="px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all bg-emerald-600 text-white shadow-sm">
+                    <i class="fa-solid fa-table-cells font-bold"></i> CSS Grid
+                </button>
+                <button id="btn-mode-flex" onclick="setLayoutMode('flexbox')" class="px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-bars-staggered"></i> Flexbox
+                </button>
+            </div>
+
+            <!-- Toast alert for copied code -->
+            <div id="toast" class="hidden fixed top-16 right-5 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium items-center gap-2 z-50 animate-bounce">
+                <i class="fa-solid fa-check-circle"></i> Code copied to clipboard!
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Work Area -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- Left Controls Sidebar -->
+        <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between overflow-y-auto shrink-0 z-10">
+            <div class="p-4 space-y-6">
+
+                <!-- Viewport Preset Control -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 block flex items-center justify-between">
+                        <span>Viewport Simulation</span>
+                        <span id="viewport-dims" class="text-emerald-400 font-mono text-[10px]">Full Width</span>
+                    </label>
+                    <div class="grid grid-cols-3 gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button onclick="setViewport('desktop')" id="vp-desktop" class="vp-btn p-2 rounded-lg flex flex-col items-center gap-1 text-xs text-slate-300 hover:bg-slate-800 transition bg-slate-800 text-emerald-400 border border-emerald-500/30">
+                            <i class="fa-solid fa-desktop text-sm"></i>
+                            <span>Desktop</span>
+                        </button>
+                        <button onclick="setViewport('tablet')" id="vp-tablet" class="vp-btn p-2 rounded-lg flex flex-col items-center gap-1 text-xs text-slate-300 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-tablet-screen-button text-sm"></i>
+                            <span>Tablet</span>
+                        </button>
+                        <button onclick="setViewport('mobile')" id="vp-mobile" class="vp-btn p-2 rounded-lg flex flex-col items-center gap-1 text-xs text-slate-300 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-mobile-screen text-sm"></i>
+                            <span>Mobile</span>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="border-slate-800">
+
+                <!-- Interactive Parameters Tweaker -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                        Layout Parameters
+                    </h3>
+
+                    <!-- Gap Control -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Gap Size</span>
+                            <span id="val-gap" class="font-mono text-emerald-400">16px</span>
+                        </div>
+                        <input type="range" id="input-gap" min="0" max="40" value="16" step="4" oninput="updateParams()"
+                            class="w-full accent-emerald-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
+                    </div>
+
+                    <!-- Padding Control -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Container Padding</span>
+                            <span id="val-padding" class="font-mono text-emerald-400">16px</span>
+                        </div>
+                        <input type="range" id="input-padding" min="0" max="40" value="16" step="4" oninput="updateParams()"
+                            class="w-full accent-emerald-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
+                    </div>
+
+                    <!-- Sidebar Width Control -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Sidebar Desktop Width</span>
+                            <span id="val-sidebar" class="font-mono text-emerald-400">220px</span>
+                        </div>
+                        <input type="range" id="input-sidebar" min="160" max="320" value="220" step="10" oninput="updateParams()"
+                            class="w-full accent-emerald-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
+                    </div>
+
+                    <!-- Card Minimum Width Control -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Card Responsive Min-Width</span>
+                            <span id="val-cardmin" class="font-mono text-emerald-400">200px</span>
+                        </div>
+                        <input type="range" id="input-cardmin" min="150" max="350" value="200" step="10" oninput="updateParams()"
+                            class="w-full accent-emerald-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
+                    </div>
+                </div>
+
+                <hr class="border-slate-800">
+
+                <!-- Dynamic Features Checkboxes -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                        Visibility & Wireframe
+                    </h3>
+
+                    <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="chk-wireframe" onchange="toggleWireframe()" class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500">
+                        <span>Highlight Layout Structure Lines</span>
+                    </label>
+
+                    <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="chk-cards" checked onchange="toggleCardCount()" class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500">
+                        <span>Show Extra Cards (6 Items)</span>
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- Footer Badge -->
+            <div class="p-4 bg-slate-950/60 border-t border-slate-800 text-xs text-slate-500 flex justify-between items-center">
+                <span>Layout Engine v2.0</span>
+                <span class="flex items-center gap-1 text-emerald-400"><i class="fa-solid fa-bolt text-xs"></i> CSS Native</span>
+            </div>
+        </aside>
+
+        <!-- Center Interactive Preview & Code Split Pane -->
+        <main class="flex-1 flex flex-col bg-slate-950 overflow-hidden relative">
+
+            <!-- Sub Navigation Tabs for Live View / Code View -->
+            <div class="bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between shrink-0 h-12">
+                <div class="flex space-x-1">
+                    <button id="tab-btn-preview" onclick="setActiveTab('preview')" class="px-3 py-1.5 text-xs font-medium rounded-lg text-emerald-400 bg-slate-800 border border-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Live Interactive Canvas
+                    </button>
+                    <button id="tab-btn-code" onclick="setActiveTab('code')" class="px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Generated HTML & CSS Code
+                    </button>
+                </div>
+
+                <!-- Active Mode Indicator Badge -->
+                <div class="text-xs text-slate-400 flex items-center gap-2">
+                    <span>Active Paradigm:</span>
+                    <span id="badge-mode-name" class="font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">CSS GRID</span>
+                </div>
+            </div>
+
+            <!-- Visual Viewport Canvas Area -->
+            <div id="panel-preview" class="flex-1 flex items-center justify-center p-4 overflow-auto bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
+                
+                <!-- Scalable Simulation Wrapper -->
+                <div id="viewport-container" class="w-full h-full max-w-full transition-all duration-300 ease-in-out flex flex-col rounded-xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden relative">
+                    
+                    <!-- Simulated Browser Bar -->
+                    <div class="bg-slate-800/80 backdrop-blur px-3 py-2 border-b border-slate-700/60 flex items-center gap-2 shrink-0">
+                        <div class="flex space-x-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
+                        </div>
+                        <div class="flex-1 text-center">
+                            <div class="bg-slate-900/80 rounded-md py-0.5 px-3 text-[11px] font-mono text-slate-400 inline-block truncate max-w-md border border-slate-800">
+                                https://example.com/dashboard-preview
+                            </div>
+                        </div>
+                        <div class="text-slate-400 text-xs">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Layout Canvas Window -->
+                    <div id="render-target" class="flex-1 overflow-auto bg-slate-950 p-4 layout-transition">
+                        <!-- Content dynamically rendered via JavaScript -->
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Snippets & Code Display Area (Hidden by Default) -->
+            <div id="panel-code" class="flex-1 hidden flex-col bg-slate-950 overflow-hidden">
+                <!-- Sub Header inside Code Tab -->
+                <div class="bg-slate-900/60 border-b border-slate-800 px-4 py-2 flex items-center justify-between shrink-0">
+                    <div class="flex space-x-2">
+                        <button id="code-sub-html" onclick="setCodeSubTab('html')" class="px-2.5 py-1 text-xs font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">HTML Markup</button>
+                        <button id="code-sub-css" onclick="setCodeSubTab('css')" class="px-2.5 py-1 text-xs font-mono rounded text-slate-400 hover:text-slate-200">CSS Stylesheet</button>
+                    </div>
+
+                    <button onclick="copyToClipboard()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-regular fa-copy"></i> Copy Code
+                    </button>
+                </div>
+
+                <!-- Code Container -->
+                <div class="flex-1 overflow-auto p-4 font-mono text-xs leading-relaxed text-slate-300 bg-slate-950">
+                    <pre id="code-display" class="whitespace-pre"><code id="code-content">Loading snippet...</code></pre>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Script Section: Application Logic -->
+    <script>
+        // Global Application State
+        const state = {
+            mode: 'grid', // 'grid' | 'flexbox'
+            viewport: 'desktop', // 'desktop' | 'tablet' | 'mobile'
+            activeTab: 'preview', // 'preview' | 'code'
+            codeSubTab: 'html', // 'html' | 'css'
+            wireframe: false,
+            extraCards: true,
+            params: {
+                gap: 16,
+                padding: 16,
+                sidebarWidth: 220,
+                cardMinWidth: 200
+            }
+        };
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+        });
+
+        // Set Layout Engine Mode
+        function setLayoutMode(mode) {
+            state.mode = mode;
+            
+            // Update UI buttons
+            const btnGrid = document.getElementById('btn-mode-grid');
+            const btnFlex = document.getElementById('btn-mode-flex');
+            const badge = document.getElementById('badge-mode-name');
+
+            if (mode === 'grid') {
+                btnGrid.className = 'px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all bg-emerald-600 text-white shadow-sm';
+                btnFlex.className = 'px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white';
+                badge.textContent = 'CSS GRID';
+            } else {
+                btnFlex.className = 'px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all bg-emerald-600 text-white shadow-sm';
+                btnGrid.className = 'px-3 py-1.5 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white';
+                badge.textContent = 'FLEXBOX';
+            }
+
+            renderApp();
+        }
+
+        // Set Viewport Target Preset
+        function setViewport(preset) {
+            state.viewport = preset;
+            const container = document.getElementById('viewport-container');
+            const dimsText = document.getElementById('viewport-dims');
+
+            // Reset buttons styling
+            document.querySelectorAll('.vp-btn').forEach(btn => {
+                btn.className = 'vp-btn p-2 rounded-lg flex flex-col items-center gap-1 text-xs text-slate-300 hover:bg-slate-800 transition';
+            });
+
+            const activeBtn = document.getElementById(`vp-${preset}`);
+            if(activeBtn) {
+                activeBtn.className = 'vp-btn p-2 rounded-lg flex flex-col items-center gap-1 text-xs text-white bg-slate-800 border border-emerald-500/30 text-emerald-400';
+            }
+
+            if (preset === 'desktop') {
+                container.style.maxWidth = '100%';
+                dimsText.textContent = '100% (Desktop)';
+            } else if (preset === 'tablet') {
+                container.style.maxWidth = '768px';
+                dimsText.textContent = '768px (Tablet)';
+            } else if (preset === 'mobile') {
+                container.style.maxWidth = '375px';
+                dimsText.textContent = '375px (Mobile)';
+            }
+        }
+
+        // Update Slider Parameters
+        function updateParams() {
+            state.params.gap = parseInt(document.getElementById('input-gap').value);
+            state.params.padding = parseInt(document.getElementById('input-padding').value);
+            state.params.sidebarWidth = parseInt(document.getElementById('input-sidebar').value);
+            state.params.cardMinWidth = parseInt(document.getElementById('input-cardmin').value);
+
+            // Display Labels
+            document.getElementById('val-gap').textContent = `${state.params.gap}px`;
+            document.getElementById('val-padding').textContent = `${state.params.padding}px`;
+            document.getElementById('val-sidebar').textContent = `${state.params.sidebarWidth}px`;
+            document.getElementById('val-cardmin').textContent = `${state.params.cardMinWidth}px`;
+
+            renderApp();
+        }
+
+        function toggleWireframe() {
+            state.wireframe = document.getElementById('chk-wireframe').checked;
+            renderApp();
+        }
+
+        function toggleCardCount() {
+            state.extraCards = document.getElementById('chk-cards').checked;
+            renderApp();
+        }
+
+        // Switch Main View Tab
+        function setActiveTab(tab) {
+            state.activeTab = tab;
+            const previewPanel = document.getElementById('panel-preview');
+            const codePanel = document.getElementById('panel-code');
+            const previewBtn = document.getElementById('tab-btn-preview');
+            const codeBtn = document.getElementById('tab-btn-code');
+
+            if (tab === 'preview') {
+                previewPanel.classList.remove('hidden');
+                previewPanel.classList.add('flex');
+                codePanel.classList.add('hidden');
+                codePanel.classList.remove('flex');
+
+                previewBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-emerald-400 bg-slate-800 border border-slate-700 flex items-center gap-2';
+                codeBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white flex items-center gap-2';
+            } else {
+                codePanel.classList.remove('hidden');
+                codePanel.classList.add('flex');
+                previewPanel.classList.add('hidden');
+                previewPanel.classList.remove('flex');
+
+                codeBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-emerald-400 bg-slate-800 border border-slate-700 flex items-center gap-2';
+                previewBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white flex items-center gap-2';
+                
+                updateCodeDisplay();
+            }
+        }
+
+        function setCodeSubTab(sub) {
+            state.codeSubTab = sub;
+            const htmlBtn = document.getElementById('code-sub-html');
+            const cssBtn = document.getElementById('code-sub-css');
+
+            if (sub === 'html') {
+                htmlBtn.className = 'px-2.5 py-1 text-xs font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                cssBtn.className = 'px-2.5 py-1 text-xs font-mono rounded text-slate-400 hover:text-slate-200';
+            } else {
+                cssBtn.className = 'px-2.5 py-1 text-xs font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                htmlBtn.className = 'px-2.5 py-1 text-xs font-mono rounded text-slate-400 hover:text-slate-200';
+            }
+
+            updateCodeDisplay();
+        }
+
+        // Render the Dynamic Canvas according to parameters
+        function renderApp() {
+            const target = document.getElementById('render-target');
+            const p = state.params;
+            const wireframeClass = state.wireframe ? 'outline outline-2 outline-dashed outline-emerald-500/50' : '';
+
+            const numCards = state.extraCards ? 6 : 3;
+            let cardsHTML = '';
+            
+            for (let i = 1; i <= numCards; i++) {
+                cardsHTML += `
+                    <div class="layout-card bg-slate-800/90 border border-slate-700/60 rounded-xl p-4 flex flex-col justify-between hover:border-slate-600 transition shadow-lg ${wireframeClass}">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-semibold text-emerald-400 font-mono">Widget 0${i}</span>
+                                <i class="fa-solid fa-ellipsis-vertical text-slate-500 text-xs"></i>
+                            </div>
+                            <h4 class="text-sm font-semibold text-slate-200">Metrics Summary Card</h4>
+                            <p class="text-xs text-slate-400">Flexible responsive content card using auto-fit minmax features.</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-700/40 flex justify-between items-center text-xs text-slate-500">
+                            <span>Status: Active</span>
+                            <span class="font-mono text-emerald-400">+12.4%</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.mode === 'grid') {
+                // CSS GRID ARCHITECTURE IMPLEMENTATION
+                target.innerHTML = `
+                    <style>
+                        .app-layout-grid {
+                            display: grid;
+                            grid-template-rows: auto 1fr auto;
+                            gap: ${p.gap}px;
+                            padding: ${p.padding}px;
+                            min-height: 100%;
+                            box-sizing: border-box;
+                        }
+
+                        .body-grid {
+                            display: grid;
+                            grid-template-columns: minmax(0, 1fr);
+                            gap: ${p.gap}px;
+                        }
+
+                        /* Desktop layout breakpoint using CSS Grid */
+                        @media (min-width: 768px) {
+                            .body-grid {
+                                grid-template-columns: ${p.sidebarWidth}px minmax(0, 1fr);
+                            }
+                        }
+
+                        .cards-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(min(100%, ${p.cardMinWidth}px), 1fr));
+                            gap: ${p.gap}px;
+                        }
+                    </style>
+
+                    <div class="app-layout-grid font-sans text-slate-200 h-full">
+                        <!-- Header -->
+                        <header class="bg-slate-800 border border-slate-700/70 rounded-xl p-4 flex justify-between items-center shadow-md ${wireframeClass}">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-950 font-bold">
+                                    <i class="fa-solid fa-cube"></i>
+                                </div>
+                                <span class="font-bold text-sm tracking-wide">GRID DASHBOARD</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-xs bg-slate-900/80 px-2.5 py-1 rounded-md text-slate-400 border border-slate-700/50">User Portal</span>
+                            </div>
+                        </header>
+
+                        <!-- Main Body (Sidebar + Content Grid) -->
+                        <div class="body-grid">
+                            <!-- Sidebar -->
+                            <aside class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 space-y-3 ${wireframeClass}">
+                                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Navigation</div>
+                                <nav class="space-y-1 text-xs">
+                                    <a href="#" class="block px-3 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 font-medium"><i class="fa-solid fa-house mr-2"></i> Overview</a>
+                                    <a href="#" class="block px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"><i class="fa-solid fa-chart-line mr-2"></i> Analytics</a>
+                                    <a href="#" class="block px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"><i class="fa-solid fa-gear mr-2"></i> Settings</a>
+                                </nav>
+                            </aside>
+
+                            <!-- Content Area -->
+                            <main class="space-y-4">
+                                <div class="bg-gradient-to-r from-emerald-900/30 to-slate-800 border border-slate-700/60 rounded-xl p-5 ${wireframeClass}">
+                                    <h3 class="text-base font-bold text-white mb-1">CSS Grid Architecture</h3>
+                                    <p class="text-xs text-slate-300">Using <code class="font-mono text-emerald-300 bg-emerald-950/60 px-1 rounded">grid-template-columns</code> with <code class="font-mono text-emerald-300 bg-emerald-950/60 px-1 rounded">auto-fit</code> and <code class="font-mono text-emerald-300 bg-emerald-950/60 px-1 rounded">minmax()</code> for fluid card arrangements without rigid media query rules.</p>
+                                </div>
+
+                                <!-- Cards Grid Container -->
+                                <div class="cards-grid">
+                                    ${cardsHTML}
+                                </div>
+                            </main>
+                        </div>
+
+                        <!-- Footer -->
+                        <footer class="bg-slate-800 border border-slate-700/70 rounded-xl p-3 text-center text-xs text-slate-400 ${wireframeClass}">
+                            CSS Grid Implementation • Responsive Multi-column System
+                        </footer>
+                    </div>
+                `;
+            } else {
+                // FLEXBOX ARCHITECTURE IMPLEMENTATION
+                target.innerHTML = `
+                    <style>
+                        .app-layout-flex {
+                            display: flex;
+                            flex-direction: column;
+                            gap: ${p.gap}px;
+                            padding: ${p.padding}px;
+                            min-height: 100%;
+                            box-sizing: border-box;
+                        }
+
+                        .body-flex {
+                            display: flex;
+                            flex-direction: column;
+                            gap: ${p.gap}px;
+                            flex: 1;
+                        }
+
+                        .sidebar-flex {
+                            width: 100%;
+                            flex-shrink: 0;
+                        }
+
+                        .main-flex {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            gap: ${p.gap}px;
+                        }
+
+                        .cards-flex {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: ${p.gap}px;
+                        }
+
+                        .cards-flex > .layout-card {
+                            flex: 1 1 ${p.cardMinWidth}px;
+                        }
+
+                        /* Desktop Breakpoint for Flexbox */
+                        @media (min-width: 768px) {
+                            .body-flex {
+                                flex-direction: row;
+                            }
+                            .sidebar-flex {
+                                width: ${p.sidebarWidth}px;
+                            }
+                        }
+                    </style>
+
+                    <div class="app-layout-flex font-sans text-slate-200 h-full">
+                        <!-- Header -->
+                        <header class="bg-slate-800 border border-slate-700/70 rounded-xl p-4 flex justify-between items-center shadow-md ${wireframeClass}">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-slate-950 font-bold">
+                                    <i class="fa-solid fa-bars-staggered"></i>
+                                </div>
+                                <span class="font-bold text-sm tracking-wide">FLEXBOX DASHBOARD</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-xs bg-slate-900/80 px-2.5 py-1 rounded-md text-slate-400 border border-slate-700/50">User Portal</span>
+                            </div>
+                        </header>
+
+                        <!-- Main Body -->
+                        <div class="body-flex">
+                            <!-- Sidebar -->
+                            <aside class="sidebar-flex bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 space-y-3 ${wireframeClass}">
+                                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Navigation</div>
+                                <nav class="space-y-1 text-xs">
+                                    <a href="#" class="block px-3 py-2 rounded-lg bg-sky-500/10 text-sky-400 font-medium"><i class="fa-solid fa-house mr-2"></i> Overview</a>
+                                    <a href="#" class="block px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"><i class="fa-solid fa-chart-line mr-2"></i> Analytics</a>
+                                    <a href="#" class="block px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"><i class="fa-solid fa-gear mr-2"></i> Settings</a>
+                                </nav>
+                            </aside>
+
+                            <!-- Content -->
+                            <main class="main-flex">
+                                <div class="bg-gradient-to-r from-sky-900/30 to-slate-800 border border-slate-700/60 rounded-xl p-5 ${wireframeClass}">
+                                    <h3 class="text-base font-bold text-white mb-1">Flexbox Architecture</h3>
+                                    <p class="text-xs text-slate-300">Using <code class="font-mono text-sky-300 bg-sky-950/60 px-1 rounded">flex-wrap: wrap</code> with <code class="font-mono text-sky-300 bg-sky-950/60 px-1 rounded">flex: 1 1 ${p.cardMinWidth}px</code> to allow items to flow automatically onto new lines based on container constraints.</p>
+                                </div>
+
+                                <!-- Cards Flex Container -->
+                                <div class="cards-flex">
+                                    ${cardsHTML}
+                                </div>
+                            </main>
+                        </div>
+
+                        <!-- Footer -->
+                        <footer class="bg-slate-800 border border-slate-700/70 rounded-xl p-3 text-center text-xs text-slate-400 ${wireframeClass}">
+                            Flexbox Implementation • Flexible Wrapping Alignment
+                        </footer>
+                    </div>
+                `;
+            }
+
+            if (state.activeTab === 'code') {
+                updateCodeDisplay();
+            }
+        }
+
+        // Format and render clean code snippets for copying
+        function updateCodeDisplay() {
+            const p = state.params;
+            const codeDisplay = document.getElementById('code-content');
+
+            if (state.codeSubTab === 'html') {
+                if (state.mode === 'grid') {
+                    codeDisplay.textContent = 
+`<div class="dashboard-grid">
+  <header class="header">Header Content</header>
+  
+  <div class="body-layout">
+    <aside class="sidebar">Sidebar Navigation</aside>
+    
+    <main class="main-content">
+      <div class="banner">Welcome Back</div>
+      
+      <div class="card-grid">
+        <div class="card">Card 1</div>
+        <div class="card">Card 2</div>
+        <div class="card">Card 3</div>
+      </div>
+    </main>
+  </div>
+  
+  <footer class="footer">Footer Info</footer>
+</div>`;
+                } else {
+                    codeDisplay.textContent = 
+`<div class="dashboard-flex">
+  <header class="header">Header Content</header>
+  
+  <div class="body-layout">
+    <aside class="sidebar">Sidebar Navigation</aside>
+    
+    <main class="main-content">
+      <div class="banner">Welcome Back</div>
+      
+      <div class="card-flex-wrapper">
+        <div class="card">Card 1</div>
+        <div class="card">Card 2</div>
+        <div class="card">Card 3</div>
+      </div>
+    </main>
+  </div>
+  
+  <footer class="footer">Footer Info</footer>
+</div>`;
+                }
+            } else {
+                if (state.mode === 'grid') {
+                    codeDisplay.textContent = 
+`/* CSS Grid Responsive Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: ${p.gap}px;
+  padding: ${p.padding}px;
+  min-height: 100vh;
+}
+
+.body-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${p.gap}px;
+}
+
+/* Responsive Desktop Media Query */
+@media (min-width: 768px) {
+  .body-layout {
+    grid-template-columns: ${p.sidebarWidth}px 1fr;
+  }
+}
+
+/* Responsive Auto-Fitting Grid Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, ${p.cardMinWidth}px), 1fr));
+  gap: ${p.gap}px;
+}`;
+                } else {
+                    codeDisplay.textContent = 
+`/* Flexbox Responsive Layout */
+.dashboard-flex {
+  display: flex;
+  flex-direction: column;
+  gap: ${p.gap}px;
+  padding: ${p.padding}px;
+  min-height: 100vh;
+}
+
+.body-layout {
+  display: flex;
+  flex-direction: column;
+  gap: ${p.gap}px;
+  flex: 1;
+}
+
+/* Responsive Desktop Media Query */
+@media (min-width: 768px) {
+  .body-layout {
+    flex-direction: row;
+  }
+  .sidebar {
+    width: ${p.sidebarWidth}px;
+    flex-shrink: 0;
+  }
+}
+
+/* Responsive Flex Wrapping Cards */
+.card-flex-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${p.gap}px;
+}
+
+.card {
+  flex: 1 1 ${p.cardMinWidth}px;
+}`;
+                }
+            }
+        }
+
+        // Copy Code Helper
+        function copyToClipboard() {
+            const codeText = document.getElementById('code-content').textContent;
+            
+            // Clipboard fallback
+            const el = document.createElement('textarea');
+            el.value = codeText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            // Toast feedback
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
