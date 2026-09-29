@@ -1,0 +1,319 @@
+    body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: rgb(237, 209, 193)
+}
+
+.header {
+    background-color: #dba47dc3;
+    color: #5c2c06;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header nav a {
+    color: brown;
+    margin-left: 1rem;
+    text-decoration:none;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem
+}
+
+.footer {
+    background-color: #864d24;
+    text-align: center;
+    color: rgb(218, 196, 184)
+}
+
+.page-logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4a90e2;
+  text-align: center;
+  padding: 1rem;
+}
+
+.section-title {
+  color: #fffacd;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #8B4513;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+body.products-page {
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+              url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
+  color: #ffffff;
+}
+
+.product-swipe-container {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 1rem 0.5rem 2rem 0.5rem;
+}
+
+.product-card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  background-color: rgba(228, 114, 69, 0.562);
+  color: #333333;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.product-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #5c2c06;
+}
+
+.btn-add {
+  background-color: #8B4513;
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+body.contact-page {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.75rem;
+    text-align: center;
+    color: #ffffff;
+}
+body {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
+color: #ffffff;
+}
+
+/* Navigation Bar */
+.top-bar {
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(30, 15, 5, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.back-btn {
+    color: #fffacd;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+.back-btn:hover {
+    color: #ffffff;
+    transform: translateX(-4px);
+}
+
+.page-logo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fffacd;
+}
+
+.content {
+    flex: 1;
+    padding: 3rem 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page-title {
+    text-align: center;
+    color: #fffacd;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #dddddd;
+    margin-bottom: 3rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.75rem;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25 ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fffacd;
+    color: #fffacd;
+}
+
+.icon-box {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #fffacd;
+    }
+
+.card-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.card-detail {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+}
+
+.footer {
+    background-color: rgba(30, 15, 5, 0.95);
+    color: #fffacd;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.875rem;
+}
+
+body.about-page {
+    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+    url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
+    color: #ffffff;
+}
+
+.about-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+.page-title {
+    text-align: center;
+    color: #fffacd;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #dddddd;
+    margin-bottom: 3rem;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+.glass-card h2 {
+    color: #fffacd;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.glass-card p {
+    line-height: 1.7;
+    color: #f1f1f1;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+}
+
+.glass-card p:last-child {
+    margin-bottom: 0;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.value-box {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 250, 205, 0.15);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.value-icon {
+    font-size: 2rem;
+    color: #fffacd;
+    margin-bottom: 0.5rem;
+}
+
+.value-title {
+    font-weight: 700;
+    color: #fffacd;
+    margin-bottom: 0.25rem;
+}
