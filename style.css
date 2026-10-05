@@ -95,9 +95,14 @@ body {
   margin-bottom: 3rem;
 }
 
+/* Custom color for the navbar */
+.navbar.bg-dark {
+  background-color: rgba(0, 0, 0, 0.6)
+
 /* ---------- Dark theme for inner pages ---------- */
 body.products-page,
 body.contact-page,
+body.home-page,
 body.about-page {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
