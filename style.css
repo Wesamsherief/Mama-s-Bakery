@@ -52,6 +52,10 @@ body {
   text-decoration: none;
 }
 
+.custom-nav {
+  background-color: #5C4033 
+}
+
 /* ---------- Inner-page top bar ---------- */
 .top-bar {
   padding: 1rem 2rem;
