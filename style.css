@@ -32,8 +32,17 @@ body {
   background-color: rgba(30, 15, 5, 0.95);
   color: #fffacd;
   text-align: center;
-  padding: 0.5rem;
-  font-size: 0.875rem;
+  padding: 1rem 0; 
+  font-size: 0.875rem; 
+}
+
+/* Reduce margin/spacing between elements inside the footer */
+.footer p,
+.footer ul,
+.footer .nav-link {
+  margin-bottom: 0;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 /* ---------- Index page header ---------- */
@@ -63,6 +72,15 @@ body {
   align-items: center;
   justify-content: space-between;
   background-color: #5C4033;
+  background-color: #8B4513;
+  min-height: 60px;
+}
+.top-bar .navbar-brand,
+.top-bar .navbar-toggler,
+.top-bar .navbar-collapse {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }
 
 .back-btn {
