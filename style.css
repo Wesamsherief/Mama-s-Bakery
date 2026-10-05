@@ -53,7 +53,7 @@ body {
 }
 
 .custom-nav {
-  background-color: #5C4033 
+  background-color: #5C4033;
 }
 
 /* ---------- Inner-page top bar ---------- */
@@ -62,7 +62,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(30, 15, 5, 0.85);
+  background-color: #5C4033;
   backdrop-filter: blur(8px);
 }
 
