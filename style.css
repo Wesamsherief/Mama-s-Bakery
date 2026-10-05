@@ -75,13 +75,6 @@ body {
   background-color: #8B4513;
   min-height: 60px;
 }
-.top-bar .navbar-brand,
-.top-bar .navbar-toggler,
-.top-bar .navbar-collapse {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
 
 .back-btn {
   color: #fffacd;
