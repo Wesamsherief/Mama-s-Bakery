@@ -11,12 +11,9 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: rgb(237, 209, 193);
-  color: #5c2c06;
-  text-align: center;
+  color: #ffffff;
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
-  color: #ffffff;
 }
 
 /* ---------- Shared layout ---------- */
@@ -31,51 +28,49 @@ body {
 .footer {
   background-color: rgba(30, 15, 5, 0.95);
   color: #fffacd;
-  text-align: center;
-  padding: 1rem 0; 
-  font-size: 0.875rem; 
+  padding: 2rem 0 1rem;
+  font-size: 0.875rem;
 }
 
-/* Reduce margin/spacing between elements inside the footer */
-.footer p,
-.footer ul,
-.footer .nav-link {
-  margin-bottom: 0;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+.footer p {
+  margin-bottom: 0.5rem;
 }
 
-/* ---------- Index page header ---------- */
-.header {
-  background-color: #dba47dc3;
-  color: #5c2c06;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header nav a {
-  color: #8B4513;
-  margin-left: 1rem;
-  text-decoration: none;
-}
-
-.custom-nav {
-  background-color: #5C4033;
-}
-
-/* ---------- Inner-page top bar ---------- */
-.top-bar {
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #5C4033;
+/* ---------- Navigation ---------- */
+.custom-navbar {
   background-color: #8B4513;
-  min-height: 60px;
+  padding: 0.75rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+.custom-navbar .navbar-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fffacd !important;
+}
+
+.custom-navbar .nav-link {
+  color: #fffacd !important;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link.active {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+.custom-navbar .navbar-toggler {
+  border-color: rgba(255, 250, 205, 0.5);
+}
+
+.custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 250, 205, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ---------- Inner-page top bar / Back btn ---------- */
 .back-btn {
   color: #fffacd;
   text-decoration: none;
@@ -92,34 +87,16 @@ body {
   transform: translateX(-4px);
 }
 
-.page-logo {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #fffacd;
-}
-
 /* ---------- Page titles ---------- */
 .page-title {
-  text-align: center;
   color: #fffacd;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  text-align: center;
   color: #dddddd;
-  margin-bottom: 3rem;
-}
-
-/* ---------- Dark theme for inner pages ---------- */
-body.products-page,
-body.contact-page,
-body.home-page,
-body.about-page {
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat fixed;
-  color: #ffffff;
+  margin-bottom: 2rem;
 }
 
 /* ---------- Products page ---------- */
@@ -144,7 +121,7 @@ body.about-page {
 .product-card {
   flex: 0 0 280px;
   scroll-snap-align: start;
-  background-color: rgba(228, 114, 69, 0.562);
+  background-color: rgba(228, 114, 69, 0.85);
   color: #333333;
   border-radius: 12px;
   overflow: hidden;
